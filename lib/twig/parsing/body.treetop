@@ -1,0 +1,22 @@
+module Twig
+module Parsing
+
+grammar Body
+  include Statement
+  include Whitespace
+  
+  rule body
+    first:statement more:(
+    (space / tab / carriage_return)*
+    statement_delim
+    statement
+    )*
+  end
+  
+  rule statement_delim
+    ";" / newline
+  end
+end
+
+end
+end

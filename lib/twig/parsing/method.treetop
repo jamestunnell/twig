@@ -1,0 +1,18 @@
+module Twig
+module Parsing
+
+grammar Method
+  include Identifier
+  include Args
+  include Body
+
+  rule method
+    "method" ws+
+    identifier ws*
+    "(" ws* args? ws* ")" ws*
+    "{" ws* body? ws* "}"
+  end
+end
+
+end
+end

@@ -1,0 +1,27 @@
+module Twig
+module Parsing
+
+grammar Whitespace
+  rule ws
+    space / tab / carriage_return / newline
+  end
+  
+  rule space
+    " "
+  end
+  
+  rule tab
+    "\t"
+  end
+  
+  rule carriage_return
+    "\r"
+  end
+  
+  rule newline
+    "\n"
+  end
+end
+
+end
+end

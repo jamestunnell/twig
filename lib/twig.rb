@@ -1,1 +1,12 @@
 require 'twig/version'
+require 'treetop'
+
+require 'twig/parsing/whitespace'
+require 'twig/parsing/identifier'
+require 'twig/parsing/args_node'
+require 'twig/parsing/args'
+require 'twig/parsing/statement'
+require 'twig/parsing/body'
+require 'twig/parsing/function_node'
+require 'twig/parsing/function'
+require 'twig/parsing/method'

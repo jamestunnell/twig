@@ -1,0 +1,18 @@
+module Twig
+module Parsing
+
+grammar Args
+  include Whitespace
+  include Identifier
+
+  rule args
+    first:arg more:(ws* "," ws* arg)* <ArgsNode>
+  end
+
+  rule arg
+    identifier default_val:(ws* "=" ws* "dummy")?
+  end
+end
+
+end
+end

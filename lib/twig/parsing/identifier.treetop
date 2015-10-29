@@ -1,0 +1,11 @@
+module Twig
+module Parsing
+
+grammar Identifier
+  rule identifier
+    ([A-Za-z] / "_") ([A-Za-z] / [0-9] / "_")*
+  end
+end
+
+end
+end
