@@ -3,6 +3,7 @@ require 'treetop'
 
 require 'twig/parsing/whitespace_parsing'
 require 'twig/parsing/identifier_parsing'
+require 'twig/parsing/integer_parsing'
 require 'twig/parsing/args_node'
 require 'twig/parsing/args_parsing'
 require 'twig/parsing/statement_parsing'

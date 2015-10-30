@@ -1,0 +1,59 @@
+module Twig
+module Parsing
+
+grammar Integer
+  rule integer
+    bin_int / hex_int / dec_int
+  end
+
+  rule bin_int
+    sign? bin_prefix bin_digit+ {
+      def to_i
+        text_value.to_i(2)
+      end
+    }
+  end
+
+  rule hex_int
+    sign? hex_prefix hex_digit+ {
+      def to_i
+        text_value.to_i(16)
+      end
+    }
+  end
+
+  rule dec_int
+    sign? dec_digit+ {
+      def to_i
+        text_value.to_i(10)
+      end
+    }
+  end
+
+  rule bin_prefix
+    "0" [Bb]
+  end
+
+  rule bin_digit
+    [0-1]
+  end
+
+  rule hex_prefix
+    "0" [Xx]
+  end
+
+  rule hex_digit
+    [0-9A-Fa-f]
+  end
+
+  rule dec_digit
+    [0-9]
+  end
+
+  rule sign
+    "+" / "-"
+  end
+end
+
+end
+end
