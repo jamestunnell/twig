@@ -4,9 +4,21 @@ module Parsing
 grammar Expression
   include Identifier
   include Literal
+  include Whitespace
   
   rule expression
-    identifier / literal
+    function_call / identifier / literal
+  end
+  
+  rule function_call
+    identifier
+    "(" ws*
+    args:(first:arg more:(ws* "," ws* another:arg)*)? ws*
+    ")"
+  end
+  
+  rule arg
+    param_name:(identifier ws* "=" ws*)? expression
   end
 end
 

@@ -15,6 +15,8 @@ module Expression
 
   include Literal
 
+  include Whitespace
+
   def _nt_expression
     start_index = index
     if node_cache[:expression].has_key?(index)
@@ -27,22 +29,302 @@ module Expression
     end
 
     i0 = index
-    r1 = _nt_identifier
+    r1 = _nt_function_call
     if r1
       r1 = SyntaxNode.new(input, (index-1)...index) if r1 == true
       r0 = r1
     else
-      r2 = _nt_literal
+      r2 = _nt_identifier
       if r2
         r2 = SyntaxNode.new(input, (index-1)...index) if r2 == true
         r0 = r2
       else
-        @index = i0
-        r0 = nil
+        r3 = _nt_literal
+        if r3
+          r3 = SyntaxNode.new(input, (index-1)...index) if r3 == true
+          r0 = r3
+        else
+          @index = i0
+          r0 = nil
+        end
       end
     end
 
     node_cache[:expression][start_index] = r0
+
+    r0
+  end
+
+  module FunctionCall0
+    def another
+      elements[3]
+    end
+  end
+
+  module FunctionCall1
+    def first
+      elements[0]
+    end
+
+    def more
+      elements[1]
+    end
+  end
+
+  module FunctionCall2
+    def identifier
+      elements[0]
+    end
+
+    def args
+      elements[3]
+    end
+
+  end
+
+  def _nt_function_call
+    start_index = index
+    if node_cache[:function_call].has_key?(index)
+      cached = node_cache[:function_call][index]
+      if cached
+        node_cache[:function_call][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    r1 = _nt_identifier
+    s0 << r1
+    if r1
+      if (match_len = has_terminal?("(", false, index))
+        r2 = true
+        @index += match_len
+      else
+        terminal_parse_failure('"("')
+        r2 = nil
+      end
+      s0 << r2
+      if r2
+        s3, i3 = [], index
+        loop do
+          r4 = _nt_ws
+          if r4
+            s3 << r4
+          else
+            break
+          end
+        end
+        r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
+        s0 << r3
+        if r3
+          i6, s6 = index, []
+          r7 = _nt_arg
+          s6 << r7
+          if r7
+            s8, i8 = [], index
+            loop do
+              i9, s9 = index, []
+              s10, i10 = [], index
+              loop do
+                r11 = _nt_ws
+                if r11
+                  s10 << r11
+                else
+                  break
+                end
+              end
+              r10 = instantiate_node(SyntaxNode,input, i10...index, s10)
+              s9 << r10
+              if r10
+                if (match_len = has_terminal?(",", false, index))
+                  r12 = true
+                  @index += match_len
+                else
+                  terminal_parse_failure('","')
+                  r12 = nil
+                end
+                s9 << r12
+                if r12
+                  s13, i13 = [], index
+                  loop do
+                    r14 = _nt_ws
+                    if r14
+                      s13 << r14
+                    else
+                      break
+                    end
+                  end
+                  r13 = instantiate_node(SyntaxNode,input, i13...index, s13)
+                  s9 << r13
+                  if r13
+                    r15 = _nt_arg
+                    s9 << r15
+                  end
+                end
+              end
+              if s9.last
+                r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
+                r9.extend(FunctionCall0)
+              else
+                @index = i9
+                r9 = nil
+              end
+              if r9
+                s8 << r9
+              else
+                break
+              end
+            end
+            r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+            s6 << r8
+          end
+          if s6.last
+            r6 = instantiate_node(SyntaxNode,input, i6...index, s6)
+            r6.extend(FunctionCall1)
+          else
+            @index = i6
+            r6 = nil
+          end
+          if r6
+            r5 = r6
+          else
+            r5 = instantiate_node(SyntaxNode,input, index...index)
+          end
+          s0 << r5
+          if r5
+            s16, i16 = [], index
+            loop do
+              r17 = _nt_ws
+              if r17
+                s16 << r17
+              else
+                break
+              end
+            end
+            r16 = instantiate_node(SyntaxNode,input, i16...index, s16)
+            s0 << r16
+            if r16
+              if (match_len = has_terminal?(")", false, index))
+                r18 = true
+                @index += match_len
+              else
+                terminal_parse_failure('")"')
+                r18 = nil
+              end
+              s0 << r18
+            end
+          end
+        end
+      end
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(FunctionCall2)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:function_call][start_index] = r0
+
+    r0
+  end
+
+  module Arg0
+    def identifier
+      elements[0]
+    end
+
+  end
+
+  module Arg1
+    def param_name
+      elements[0]
+    end
+
+    def expression
+      elements[1]
+    end
+  end
+
+  def _nt_arg
+    start_index = index
+    if node_cache[:arg].has_key?(index)
+      cached = node_cache[:arg][index]
+      if cached
+        node_cache[:arg][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0, s0 = index, []
+    i2, s2 = index, []
+    r3 = _nt_identifier
+    s2 << r3
+    if r3
+      s4, i4 = [], index
+      loop do
+        r5 = _nt_ws
+        if r5
+          s4 << r5
+        else
+          break
+        end
+      end
+      r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
+      s2 << r4
+      if r4
+        if (match_len = has_terminal?("=", false, index))
+          r6 = true
+          @index += match_len
+        else
+          terminal_parse_failure('"="')
+          r6 = nil
+        end
+        s2 << r6
+        if r6
+          s7, i7 = [], index
+          loop do
+            r8 = _nt_ws
+            if r8
+              s7 << r8
+            else
+              break
+            end
+          end
+          r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+          s2 << r7
+        end
+      end
+    end
+    if s2.last
+      r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
+      r2.extend(Arg0)
+    else
+      @index = i2
+      r2 = nil
+    end
+    if r2
+      r1 = r2
+    else
+      r1 = instantiate_node(SyntaxNode,input, index...index)
+    end
+    s0 << r1
+    if r1
+      r9 = _nt_expression
+      s0 << r9
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(Arg1)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:arg][start_index] = r0
 
     r0
   end
