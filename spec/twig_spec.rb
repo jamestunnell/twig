@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'twig'
 
 describe Twig do
   it "should have a VERSION constant" do
