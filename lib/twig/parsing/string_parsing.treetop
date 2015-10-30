@@ -1,0 +1,15 @@
+module Twig
+module Parsing
+
+grammar String
+  rule string
+    dq_string
+  end
+  
+  rule dq_string
+    '"' (!'"' .)* '"'
+  end
+end
+
+end
+end
