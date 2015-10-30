@@ -3,13 +3,13 @@ module Parsing
 
 grammar Function
   include Identifier
-  include Args
+  include Params
   include Body
   
   rule function
     "function"
     id:(ws+ identifier)? ws*
-    "(" ws* fargs:args? ws* ")" ws*
+    "(" ws* fparams:params? ws* ")" ws*
     "{" ws* fbody:body? ws* "}"
     <FunctionNode>
   end

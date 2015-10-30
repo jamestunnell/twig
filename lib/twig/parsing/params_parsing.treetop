@@ -1,16 +1,17 @@
 module Twig
 module Parsing
 
-grammar Args
+grammar Params
   include Whitespace
   include Identifier
-
-  rule args
-    first:arg more:(ws* "," ws* arg)* <ArgsNode>
+  include Expression
+  
+  rule params
+    first:param more:(ws* "," ws* param)* <ParamsNode>
   end
 
-  rule arg
-    identifier default_val:(ws* "=" ws* "dummy")?
+  rule param
+    identifier default_val:(ws* "=" ws* expression)? <ParamNode>
   end
 end
 

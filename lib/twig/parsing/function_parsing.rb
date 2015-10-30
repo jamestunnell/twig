@@ -13,7 +13,7 @@ module Function
 
   include Identifier
 
-  include Args
+  include Params
 
   include Body
 
@@ -28,7 +28,7 @@ module Function
       elements[1]
     end
 
-    def fargs
+    def fparams
       elements[5]
     end
 
@@ -127,7 +127,7 @@ module Function
             r10 = instantiate_node(SyntaxNode,input, i10...index, s10)
             s0 << r10
             if r10
-              r13 = _nt_args
+              r13 = _nt_params
               if r13
                 r12 = r13
               else

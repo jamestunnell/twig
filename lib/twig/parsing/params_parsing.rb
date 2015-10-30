@@ -4,24 +4,26 @@
 module Twig
 module Parsing
 
-module Args
+module Params
   include Treetop::Runtime
 
   def root
-    @root ||= :args
+    @root ||= :params
   end
 
   include Whitespace
 
   include Identifier
 
-  module Args0
-    def arg
+  include Expression
+
+  module Params0
+    def param
       elements[3]
     end
   end
 
-  module Args1
+  module Params1
     def first
       elements[0]
     end
@@ -31,19 +33,19 @@ module Args
     end
   end
 
-  def _nt_args
+  def _nt_params
     start_index = index
-    if node_cache[:args].has_key?(index)
-      cached = node_cache[:args][index]
+    if node_cache[:params].has_key?(index)
+      cached = node_cache[:params][index]
       if cached
-        node_cache[:args][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        node_cache[:params][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
         @index = cached.interval.end
       end
       return cached
     end
 
     i0, s0 = index, []
-    r1 = _nt_arg
+    r1 = _nt_param
     s0 << r1
     if r1
       s2, i2 = [], index
@@ -82,14 +84,14 @@ module Args
             r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
             s3 << r7
             if r7
-              r9 = _nt_arg
+              r9 = _nt_param
               s3 << r9
             end
           end
         end
         if s3.last
           r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
-          r3.extend(Args0)
+          r3.extend(Params0)
         else
           @index = i3
           r3 = nil
@@ -104,22 +106,25 @@ module Args
       s0 << r2
     end
     if s0.last
-      r0 = instantiate_node(ArgsNode,input, i0...index, s0)
-      r0.extend(Args1)
+      r0 = instantiate_node(ParamsNode,input, i0...index, s0)
+      r0.extend(Params1)
     else
       @index = i0
       r0 = nil
     end
 
-    node_cache[:args][start_index] = r0
+    node_cache[:params][start_index] = r0
 
     r0
   end
 
-  module Arg0
+  module Param0
+    def expression
+      elements[3]
+    end
   end
 
-  module Arg1
+  module Param1
     def identifier
       elements[0]
     end
@@ -129,12 +134,12 @@ module Args
     end
   end
 
-  def _nt_arg
+  def _nt_param
     start_index = index
-    if node_cache[:arg].has_key?(index)
-      cached = node_cache[:arg][index]
+    if node_cache[:param].has_key?(index)
+      cached = node_cache[:param][index]
       if cached
-        node_cache[:arg][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        node_cache[:param][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
         @index = cached.interval.end
       end
       return cached
@@ -178,20 +183,14 @@ module Args
           r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
           s3 << r7
           if r7
-            if (match_len = has_terminal?("dummy", false, index))
-              r9 = instantiate_node(SyntaxNode,input, index...(index + match_len))
-              @index += match_len
-            else
-              terminal_parse_failure('"dummy"')
-              r9 = nil
-            end
+            r9 = _nt_expression
             s3 << r9
           end
         end
       end
       if s3.last
         r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
-        r3.extend(Arg0)
+        r3.extend(Param0)
       else
         @index = i3
         r3 = nil
@@ -204,22 +203,22 @@ module Args
       s0 << r2
     end
     if s0.last
-      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Arg1)
+      r0 = instantiate_node(ParamNode,input, i0...index, s0)
+      r0.extend(Param1)
     else
       @index = i0
       r0 = nil
     end
 
-    node_cache[:arg][start_index] = r0
+    node_cache[:param][start_index] = r0
 
     r0
   end
 
 end
 
-class ArgsParser < Treetop::Runtime::CompiledParser
-  include Args
+class ParamsParser < Treetop::Runtime::CompiledParser
+  include Params
 end
 
 

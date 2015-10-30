@@ -5,11 +5,11 @@ module Parsing
       id.empty? ? "" : id.identifier.text_value
     end
 
-    def args
-      if fargs.empty?
+    def params
+      if fparams.empty?
         return []
       else
-        fargs.args
+        fparams.params
       end
     end
   end

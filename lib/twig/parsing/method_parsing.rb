@@ -13,7 +13,7 @@ module Method
 
   include Identifier
 
-  include Args
+  include Params
 
   include Body
 
@@ -98,7 +98,7 @@ module Method
               r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
               s0 << r8
               if r8
-                r11 = _nt_args
+                r11 = _nt_params
                 if r11
                   r10 = r11
                 else
