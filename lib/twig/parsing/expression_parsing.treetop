@@ -1,0 +1,14 @@
+module Twig
+module Parsing
+
+grammar Expression
+  include Identifier
+  include Literal
+  
+  rule expression
+    identifier / literal
+  end
+end
+
+end
+end
