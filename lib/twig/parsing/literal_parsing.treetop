@@ -1,0 +1,14 @@
+module Twig
+module Parsing
+
+grammar Literal
+  include Integer
+  include String
+  
+  rule literal
+    string / integer
+  end
+end
+
+end
+end
