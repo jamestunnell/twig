@@ -7,10 +7,20 @@ grammar Expression
   include Whitespace
   
   rule expression
-    function_call / identifier / literal
+    method_call / call_chain / grouped_expression / identifier / literal
   end
   
-  rule function_call
+  rule method_call
+    reciever:(grouped_expression / identifier / literal)
+    "."
+    call_chain
+  end
+  
+  rule call_chain
+    first:call more:("." call)*
+  end
+  
+  rule call
     identifier
     "(" ws*
     args:(first:arg more:(ws* "," ws* another:arg)*)? ws*
@@ -19,6 +29,10 @@ grammar Expression
   
   rule arg
     param_name:(identifier ws* "=" ws*)? expression
+  end
+  
+  rule grouped_expression
+    "(" ws* expression ws* ")"
   end
 end
 
