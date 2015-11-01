@@ -19,13 +19,19 @@ module Body
     def statement_delim
       elements[1]
     end
-
-    def statement
-      elements[2]
-    end
   end
 
   module Body1
+    def statement_delim
+      elements[1]
+    end
+
+    def statement
+      elements[4]
+    end
+  end
+
+  module Body2
     def first
       elements[0]
     end
@@ -33,6 +39,7 @@ module Body
     def more
       elements[1]
     end
+
   end
 
   def _nt_body
@@ -55,27 +62,7 @@ module Body
         i3, s3 = index, []
         s4, i4 = [], index
         loop do
-          i5 = index
-          r6 = _nt_space
-          if r6
-            r6 = SyntaxNode.new(input, (index-1)...index) if r6 == true
-            r5 = r6
-          else
-            r7 = _nt_tab
-            if r7
-              r7 = SyntaxNode.new(input, (index-1)...index) if r7 == true
-              r5 = r7
-            else
-              r8 = _nt_carriage_return
-              if r8
-                r8 = SyntaxNode.new(input, (index-1)...index) if r8 == true
-                r5 = r8
-              else
-                @index = i5
-                r5 = nil
-              end
-            end
-          end
+          r5 = _nt_non_delim_ws
           if r5
             s4 << r5
           else
@@ -85,16 +72,64 @@ module Body
         r4 = instantiate_node(SyntaxNode,input, i4...index, s4)
         s3 << r4
         if r4
-          r9 = _nt_statement_delim
-          s3 << r9
-          if r9
-            r10 = _nt_statement
-            s3 << r10
+          r6 = _nt_statement_delim
+          s3 << r6
+          if r6
+            s7, i7 = [], index
+            loop do
+              i8, s8 = index, []
+              s9, i9 = [], index
+              loop do
+                r10 = _nt_non_delim_ws
+                if r10
+                  s9 << r10
+                else
+                  break
+                end
+              end
+              r9 = instantiate_node(SyntaxNode,input, i9...index, s9)
+              s8 << r9
+              if r9
+                r11 = _nt_statement_delim
+                s8 << r11
+              end
+              if s8.last
+                r8 = instantiate_node(SyntaxNode,input, i8...index, s8)
+                r8.extend(Body0)
+              else
+                @index = i8
+                r8 = nil
+              end
+              if r8
+                s7 << r8
+              else
+                break
+              end
+            end
+            r7 = instantiate_node(SyntaxNode,input, i7...index, s7)
+            s3 << r7
+            if r7
+              s12, i12 = [], index
+              loop do
+                r13 = _nt_non_delim_ws
+                if r13
+                  s12 << r13
+                else
+                  break
+                end
+              end
+              r12 = instantiate_node(SyntaxNode,input, i12...index, s12)
+              s3 << r12
+              if r12
+                r14 = _nt_statement
+                s3 << r14
+              end
+            end
           end
         end
         if s3.last
           r3 = instantiate_node(SyntaxNode,input, i3...index, s3)
-          r3.extend(Body0)
+          r3.extend(Body1)
         else
           @index = i3
           r3 = nil
@@ -107,10 +142,23 @@ module Body
       end
       r2 = instantiate_node(SyntaxNode,input, i2...index, s2)
       s0 << r2
+      if r2
+        s15, i15 = [], index
+        loop do
+          r16 = _nt_statement_delim
+          if r16
+            s15 << r16
+          else
+            break
+          end
+        end
+        r15 = instantiate_node(SyntaxNode,input, i15...index, s15)
+        s0 << r15
+      end
     end
     if s0.last
       r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
-      r0.extend(Body1)
+      r0.extend(Body2)
     else
       @index = i0
       r0 = nil
@@ -119,6 +167,9 @@ module Body
     node_cache[:body][start_index] = r0
 
     r0
+  end
+
+  module StatementDelim0
   end
 
   def _nt_statement_delim
@@ -132,29 +183,89 @@ module Body
       return cached
     end
 
-    i0 = index
-    if (match_len = has_terminal?(";", false, index))
-      r1 = true
-      @index += match_len
-    else
-      terminal_parse_failure('";"')
-      r1 = nil
+    i0, s0 = index, []
+    s1, i1 = [], index
+    loop do
+      r2 = _nt_non_delim_ws
+      if r2
+        s1 << r2
+      else
+        break
+      end
     end
+    r1 = instantiate_node(SyntaxNode,input, i1...index, s1)
+    s0 << r1
+    if r1
+      i3 = index
+      if (match_len = has_terminal?(";", false, index))
+        r4 = true
+        @index += match_len
+      else
+        terminal_parse_failure('";"')
+        r4 = nil
+      end
+      if r4
+        r4 = SyntaxNode.new(input, (index-1)...index) if r4 == true
+        r3 = r4
+      else
+        r5 = _nt_newline
+        if r5
+          r5 = SyntaxNode.new(input, (index-1)...index) if r5 == true
+          r3 = r5
+        else
+          @index = i3
+          r3 = nil
+        end
+      end
+      s0 << r3
+    end
+    if s0.last
+      r0 = instantiate_node(SyntaxNode,input, i0...index, s0)
+      r0.extend(StatementDelim0)
+    else
+      @index = i0
+      r0 = nil
+    end
+
+    node_cache[:statement_delim][start_index] = r0
+
+    r0
+  end
+
+  def _nt_non_delim_ws
+    start_index = index
+    if node_cache[:non_delim_ws].has_key?(index)
+      cached = node_cache[:non_delim_ws][index]
+      if cached
+        node_cache[:non_delim_ws][index] = cached = SyntaxNode.new(input, index...(index + 1)) if cached == true
+        @index = cached.interval.end
+      end
+      return cached
+    end
+
+    i0 = index
+    r1 = _nt_space
     if r1
       r1 = SyntaxNode.new(input, (index-1)...index) if r1 == true
       r0 = r1
     else
-      r2 = _nt_newline
+      r2 = _nt_tab
       if r2
         r2 = SyntaxNode.new(input, (index-1)...index) if r2 == true
         r0 = r2
       else
-        @index = i0
-        r0 = nil
+        r3 = _nt_carriage_return
+        if r3
+          r3 = SyntaxNode.new(input, (index-1)...index) if r3 == true
+          r0 = r3
+        else
+          @index = i0
+          r0 = nil
+        end
       end
     end
 
-    node_cache[:statement_delim][start_index] = r0
+    node_cache[:non_delim_ws][start_index] = r0
 
     r0
   end

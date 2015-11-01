@@ -6,15 +6,23 @@ grammar Body
   include Whitespace
   
   rule body
-    first:statement more:(
-    (space / tab / carriage_return)*
-    statement_delim
-    statement
+    first:statement 
+    more:(
+      non_delim_ws*
+      statement_delim
+      (non_delim_ws* statement_delim)*
+      non_delim_ws*
+      statement
     )*
+    statement_delim*
   end
   
   rule statement_delim
-    ";" / newline
+    non_delim_ws* (";" / newline)
+  end
+
+  rule non_delim_ws
+    space / tab / carriage_return
   end
 end
 

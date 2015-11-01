@@ -7,7 +7,7 @@ describe Parsing::WhitespaceParser do
   
   context 'any whitespace character' do
     it 'should parse' do
-      [" ","\t","\r","\n"].each {|ch| expect(@p.parse(ch)).to_not be nil }
+      WHITESPACE_CHARS.each {|ch| expect(@p.parse(ch)).to_not be nil }
     end
   end
 end
