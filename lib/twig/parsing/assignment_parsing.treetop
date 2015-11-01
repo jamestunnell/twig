@@ -1,0 +1,15 @@
+module Twig
+module Parsing
+
+grammar Assignment
+  include Identifier
+  include Whitespace
+  include Expression
+
+  rule assignment
+    identifier ws* "=" ws* expression
+  end
+end
+
+end
+end
