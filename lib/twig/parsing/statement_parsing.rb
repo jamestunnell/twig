@@ -11,6 +11,10 @@ module Statement
     @root ||= :statement
   end
 
+  include Assignment
+
+  include Expression
+
   def _nt_statement
     start_index = index
     if node_cache[:statement].has_key?(index)
@@ -22,12 +26,20 @@ module Statement
       return cached
     end
 
-    if (match_len = has_terminal?("dummy", false, index))
-      r0 = instantiate_node(SyntaxNode,input, index...(index + match_len))
-      @index += match_len
+    i0 = index
+    r1 = _nt_assignment
+    if r1
+      r1 = SyntaxNode.new(input, (index-1)...index) if r1 == true
+      r0 = r1
     else
-      terminal_parse_failure('"dummy"')
-      r0 = nil
+      r2 = _nt_expression
+      if r2
+        r2 = SyntaxNode.new(input, (index-1)...index) if r2 == true
+        r0 = r2
+      else
+        @index = i0
+        r0 = nil
+      end
     end
 
     node_cache[:statement][start_index] = r0

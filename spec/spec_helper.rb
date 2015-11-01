@@ -3,6 +3,8 @@ require 'twig'
 
 include Twig
 
+WHITESPACE_CHARS = [" ","\t","\r","\n"]
+
 UPCASE_LETTERS = [
   "A","B","C","D","E","F","G","H","I","J","K","L","M",
   "N","O","P","Q","R","S","T","U","V","W","X","Y","Z"
@@ -46,3 +48,13 @@ RANDOM_ASCII_STRS = [
 
 LITERAL_STRS = RANDOM_INT_STRS + RANDOM_ASCII_STRS
 EXPRESSION_STRS = LITERAL_STRS + IDENTIFIER_STRS
+
+ASSIGNMENT_STRS = [ 
+  "WuLw65Y7PUJJl \n=\n 123456789", "dZVRwfe\n  = 0b1011", 
+  "aLYiqnQMJR   =\n \"zUc~UPEMizt\JV~smzB\"",
+  "B7como3UPfNL6= iBVHaB1DTI8Pt81p",
+  "x5UtEu6=\"Au]\lMJMOXz^}U{D}\"",
+  "iBVHaB1DTI8Pt81p\n  =0b1011"
+]
+
+STATEMENT_STRS = EXPRESSION_STRS + ASSIGNMENT_STRS

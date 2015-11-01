@@ -2,8 +2,11 @@ module Twig
 module Parsing
 
 grammar Statement
+  include Assignment
+  include Expression
+
   rule statement
-    "dummy"
+    assignment / expression
   end
 end
 
