@@ -16,7 +16,7 @@ module Parsing
     end
     
     def default_value
-      default_val.empty? ? nil : default_val.text_value
+      default_val.empty? ? nil : default_val.expression.text_value
     end
   end
 end
