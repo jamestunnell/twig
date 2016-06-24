@@ -201,19 +201,6 @@ void * trie_fetch(trie_node_t * root, uint8_t * key){
 
 }
 
-trie_node_t * trie_create(uint32_t n_keyval_pairs, uint8_t ** keys, void ** vals){
-  uint32_t i = 0;
-  uint32_t j = 0;
-  uint32_t k = 0;
-  trie_node_t * root = NULL;
-
-  assert(n_keyval_pairs > 0);
-  root = create_nonterminal_trie_node(1, NULL, NULL);
-  root->subnodes[0] = create_terminal_trie_node(keys[0], vals[0]);
-
-  for(i = 1; i < n_keyval_pairs; i++){
-    trie_add(root, keys[i], vals[i]);
-  }
-
-  return root;
+trie_node_t * trie_create(){
+  return create_nonterminal_trie_node(0, NULL, NULL);
 }

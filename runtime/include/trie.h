@@ -17,9 +17,9 @@ struct trie_node_s {
   void * val;
 };
 
-trie_node_t * trie_create(uint32_t n_keyval_pairs, uint8_t ** keys, void ** vals);
+trie_node_t * trie_create();
 void trie_add(trie_node_t * root, uint8_t * key, void * val);
 void * trie_fetch(trie_node_t * root, uint8_t * key);
-// uint8_t trie_remove(trie_node_t * root, uint8_t * key, void * val);
+// void trie_remove(trie_node_t * root, uint8_t * key);
 
 #endif
