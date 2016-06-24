@@ -3,15 +3,23 @@
 
 #include <stdint.h>
 
-typedef struct node_s node_t;
+#define MAX_TRIE_SUBNODES 65535
 
-struct node_s {
-  uint8_t n_minus_one;
-  uint8_t * keys;
-  node_t ** nodes;
-  void * value;
+typedef struct trie_node_s trie_node_t;
+
+struct trie_node_s {
+  trie_node_t ** subnodes;
+  uint16_t n_subnodes;
+
+  uint8_t * key;
+  uint16_t key_length;
+
+  void * val;
 };
 
-node_t * create_tree(uint32_t n, uint8_t ** key_strings, void ** values);
+trie_node_t * trie_create(uint32_t n_keyval_pairs, uint8_t ** keys, void ** vals);
+uint8_t trie_add(trie_node_t * root, uint8_t * key, void * val);
+void * trie_fetch(trie_node_t * root, uint8_t * key);
+// uint8_t trie_remove(trie_node_t * root, uint8_t * key, void * val);
 
 #endif
