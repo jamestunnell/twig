@@ -5,8 +5,6 @@
 #include "trie.h"
 #include <stdio.h>
 
-#define SUBNODE_NOT_FOUND (-1)
-
 static int32_t find_matching_subnode_idx(trie_node_t * node, uint8_t target_key_char)
 {
   assert(node != NULL);
@@ -40,7 +38,7 @@ static int32_t find_matching_subnode_idx(trie_node_t * node, uint8_t target_key_
   return -(l + 1);
 }
 
-static trie_node_t * create_terminal_trie_node(uint8_t * key, void * val){
+static trie_node_t * create_subnode(uint8_t * key, void * val){
   trie_node_t * node = malloc(sizeof(trie_node_t));
   assert(node != NULL);
 
@@ -51,49 +49,6 @@ static trie_node_t * create_terminal_trie_node(uint8_t * key, void * val){
   node->val = val;
 
   return node;
-}
-
-static trie_node_t * create_nonterminal_trie_node(uint16_t n_subnodes, uint8_t * key_char, void * val){
-  trie_node_t * node = malloc(sizeof(trie_node_t));
-  assert(node != NULL);
-
-  node->n_subnodes = n_subnodes;
-  node->subnodes = malloc(sizeof(trie_node_t*) * n_subnodes);
-  assert(node->subnodes != NULL);
-  node->key = key_char;
-  node->key_length = 1;
-  node->val = val;
-
-  return node;
-}
-
-static uint8_t * unique_keys(uint32_t key_counts[256], uint32_t * n_unique_keys){
-  uint32_t i = 0;
-  uint32_t j = 0;
-  uint8_t * unique_keys = NULL;
-  uint32_t n_unique = 0;
-
-  for(i = 0; i < 256; i++){
-    if (key_counts[i] != 0){
-      n_unique++;
-    }
-  }
-
-  unique_keys = (uint8_t *) malloc(n_unique * sizeof(uint8_t));
-
-  j = 0;
-  for(i = 0; i < 256; i++){
-    if (key_counts[i] != 0){
-      unique_keys[j++] = (uint8_t) i;
-      if(j == n_unique){
-        break;
-      }
-    }
-
-  }
-
-  *n_unique_keys = n_unique;
-  return unique_keys;
 }
 
 // If the terminal subnode for the given key already exists, then the given
@@ -115,13 +70,13 @@ void trie_add(trie_node_t * root, uint8_t * key, void * val){
       node->n_subnodes = 1;
       if(node->key_length > 1){
         node->key_length = 1;
-        node->subnodes[0] = create_terminal_trie_node(&node->key[1], node->val);
+        node->subnodes[0] = create_subnode(&node->key[1], node->val);
         node->val = NULL;
         // more to be done, will be picked up by the rest of loop
       }
       else
       {
-        node->subnodes[0] = create_terminal_trie_node(&key[i], val);
+        node->subnodes[0] = create_subnode(&key[i], val);
         break; // no more to be done
       }
     }
@@ -145,7 +100,7 @@ void trie_add(trie_node_t * root, uint8_t * key, void * val){
         node->subnodes[j] = prev_subnodes[j];
       }
 
-      node->subnodes[subnode_idx] = create_terminal_trie_node(&key[i], val);
+      node->subnodes[subnode_idx] = create_subnode(&key[i], val);
 
       for(i = subnode_idx; j < node->n_subnodes; j++){
         node->subnodes[j+1] = prev_subnodes[j];
@@ -202,5 +157,15 @@ void * trie_fetch(trie_node_t * root, uint8_t * key){
 }
 
 trie_node_t * trie_create(){
-  return create_nonterminal_trie_node(0, NULL, NULL);
+  trie_node_t * root = malloc(sizeof(trie_node_t));
+  assert(root != NULL);
+
+  root->n_subnodes = 0;
+  root->subnodes = malloc(0);
+  assert(root->subnodes != NULL);
+  root->key = NULL;
+  root->key_length = 0;
+  root->val = NULL;
+
+  return root;
 }

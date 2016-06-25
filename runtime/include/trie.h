@@ -3,8 +3,6 @@
 
 #include <stdint.h>
 
-#define MAX_TRIE_SUBNODES 65535
-
 typedef struct trie_node_s trie_node_t;
 
 struct trie_node_s {
@@ -21,5 +19,6 @@ trie_node_t * trie_create();
 void trie_add(trie_node_t * root, uint8_t * key, void * val);
 void * trie_fetch(trie_node_t * root, uint8_t * key);
 // void trie_remove(trie_node_t * root, uint8_t * key);
+uint16_t trie_n_subnodes(trie_node_t * root);
 
 #endif
